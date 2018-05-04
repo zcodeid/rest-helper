@@ -3,10 +3,15 @@ package id.zcode.resthelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Iterator;
 
 public class BaseController {
+
+    @Autowired
+    private HttpServletRequest request;
 
     /**
      * Convert query string into java object
@@ -26,7 +31,12 @@ public class BaseController {
         return serializeQueryString(queryString, clazz);
     }
 
-    private static <T> T serializeQueryString(String paramIn, Class<T> clazz) {
+    private <T> T serializeQueryString(Class<T> clazz) {
+        String qs = request.getQueryString();
+        return serializeQueryString(qs, clazz);
+    }
+
+    private <T> T serializeQueryString(String paramIn, Class<T> clazz) {
         JSONObject a = new JSONObject(createObject(paramIn));
         JSONObject jsonObject = new JSONObject(createObject(paramIn));
         Iterator<String> iter = a.keys();

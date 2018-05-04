@@ -45,12 +45,12 @@ public class CriteriaParser {
         Deque<Object> output = new LinkedList<>();
         Deque<String> stack = new LinkedList<>();
 
-        for (String token : searchParam.split("\\s+")) {
+        for (String token : searchParam.split(",")) {
+            token = token.trim();
             if (ops.containsKey(token)) {
                 while (!stack.isEmpty() && isHigerPrecedenceOperator(token, stack.peek()))
-                    output.push(stack.pop()
-                            .equalsIgnoreCase(SearchOperation.OR_OPERATOR) ? SearchOperation.OR_OPERATOR : SearchOperation.AND_OPERATOR);
-                stack.push(token.equalsIgnoreCase(SearchOperation.OR_OPERATOR) ? SearchOperation.OR_OPERATOR : SearchOperation.AND_OPERATOR);
+                    output.push(orAnd(stack.pop()));
+                stack.push(orAnd(token));
             } else if (token.equals(SearchOperation.LEFT_PARANTHESIS)) {
                 stack.push(SearchOperation.LEFT_PARANTHESIS);
             } else if (token.equals(SearchOperation.RIGHT_PARANTHESIS)) {
@@ -59,10 +59,13 @@ public class CriteriaParser {
                     output.push(stack.pop());
                 stack.pop();
             } else {
-
+                String dmtr = "_";
+                token = token.replaceAll("\\s+", dmtr);
                 Matcher matcher = SpecCriteraRegex.matcher(token);
                 while (matcher.find()) {
-                    output.push(new SpecSearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4), matcher.group(5)));
+                    String value = matcher.group(4);
+                    value = value.replaceAll(dmtr, " ").toLowerCase();
+                    output.push(new SpecSearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3), value, matcher.group(5)));
                 }
             }
         }
@@ -71,6 +74,11 @@ public class CriteriaParser {
             output.push(stack.pop());
 
         return output;
+    }
+
+    private String orAnd(String token){
+        boolean isOr = token.equalsIgnoreCase(SearchOperation.OR_OPERATOR);
+        return isOr ? SearchOperation.OR_OPERATOR : SearchOperation.AND_OPERATOR;
     }
 
 }

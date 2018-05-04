@@ -3,10 +3,9 @@ package id.zcode.resthelper.util;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GenericSpecification<T> implements Specification<T> {
 
@@ -20,23 +19,33 @@ public class GenericSpecification<T> implements Specification<T> {
     @Nullable
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {
+        Expression<String> expression = null;
+        if (criteria.getValue() instanceof String){
+            Pattern pattern = Pattern.compile("[a-zA-Z]");
+            Matcher matcher = pattern.matcher(criteria.getValue().toString());
+            if (matcher.find()){
+                expression = builder.lower(root.get(criteria.getKey()));
+            }else{
+                expression = root.get(criteria.getKey());
+            }
+        }
         switch (criteria.getOperation()) {
             case EQUALITY:
-                return builder.equal(root.get(criteria.getKey()), criteria.getValue());
+                return builder.equal(expression, criteria.getValue());
             case NEGATION:
-                return builder.notEqual(root.get(criteria.getKey()), criteria.getValue());
+                return builder.notEqual(expression, criteria.getValue());
             case GREATER_THAN:
                 return builder.greaterThan(root.get(criteria.getKey()), criteria.getValue().toString());
             case LESS_THAN:
                 return builder.lessThan(root.get(criteria.getKey()), criteria.getValue().toString());
             case LIKE:
-                return builder.like(root.get(criteria.getKey()), criteria.getValue().toString());
+                return builder.like(expression, criteria.getValue().toString());
             case STARTS_WITH:
-                return builder.like(root.get(criteria.getKey()), criteria.getValue() + "%");
+                return builder.like(expression, criteria.getValue() + "%");
             case ENDS_WITH:
-                return builder.like(root.get(criteria.getKey()), "%" + criteria.getValue());
+                return builder.like(expression, "%" + criteria.getValue());
             case CONTAINS:
-                return builder.like(root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
+                return builder.like(expression, "%" + criteria.getValue() + "%");
             default:
                 return null;
         }

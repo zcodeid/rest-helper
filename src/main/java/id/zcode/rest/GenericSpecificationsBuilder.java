@@ -1,4 +1,4 @@
-package id.zcode.resthelper.util;
+package id.zcode.rest;
 
 import java.util.ArrayList;
 import java.util.Collections;

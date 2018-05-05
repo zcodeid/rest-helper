@@ -1,4 +1,4 @@
-package id.zcode.resthelper.util;
+package id.zcode.rest;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;

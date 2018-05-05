@@ -1,4 +1,4 @@
-package id.zcode.resthelper.util;
+package id.zcode.rest;
 
 import org.junit.Test;
 

@@ -16,6 +16,11 @@ public class GenericSpecification<T> implements Specification<T> {
         this.criteria = criteria;
     }
 
+    public GenericSpecification() {
+        super();
+        this.criteria = new SpecSearchCriteria();
+    }
+
     @Nullable
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {

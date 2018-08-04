@@ -44,6 +44,7 @@ public class CriteriaParser {
 
         Deque<Object> output = new LinkedList<>();
         Deque<String> stack = new LinkedList<>();
+        if (searchParam == null) return output;
 
         for (String token : searchParam.split(",")) {
             token = token.trim();

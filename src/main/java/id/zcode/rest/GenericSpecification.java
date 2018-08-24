@@ -25,14 +25,18 @@ public class GenericSpecification<T> implements Specification<T> {
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {
         Expression<String> expression = null;
-        if (criteria.getValue() instanceof String){
+        if (criteria.getValue() instanceof String) {
+            Join joiner = null;
+            String[] keys = criteria.getKey().split("_");
+            for (int i = 0; i < keys.length - 1; i++) {
+                if (joiner == null) joiner = root.join(keys[i], JoinType.INNER);
+                else joiner = joiner.join(keys[i], JoinType.INNER);
+            }
             Pattern pattern = Pattern.compile("[a-zA-Z]");
             Matcher matcher = pattern.matcher(criteria.getValue().toString());
-            if (matcher.find()){
-                expression = builder.lower(root.get(criteria.getKey()));
-            }else{
-                expression = root.get(criteria.getKey());
-            }
+            expression = joiner != null ? joiner.get(keys[keys.length - 1])
+                    : root.get(criteria.getKey());
+            if (matcher.find()) expression = builder.lower(expression);
         }
         switch (criteria.getOperation()) {
             case EQUALITY:

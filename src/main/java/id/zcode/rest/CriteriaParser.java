@@ -61,11 +61,14 @@ public class CriteriaParser {
                 stack.pop();
             } else {
                 String dmtr = "_";
+                String a = token;
                 token = token.replaceAll("\\s+", dmtr);
+                boolean isReplaced = !token.equals(a);
                 Matcher matcher = SpecCriteraRegex.matcher(token);
                 while (matcher.find()) {
                     String value = matcher.group(4);
-                    value = value.replaceAll(dmtr, " ").toLowerCase();
+                    value = (isReplaced ? value.replaceAll(dmtr, " ") : value).toLowerCase();
+//                    value = value.replaceAll(dmtr, " ").toLowerCase();
                     output.push(new SpecSearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3), value, matcher.group(5)));
                 }
             }

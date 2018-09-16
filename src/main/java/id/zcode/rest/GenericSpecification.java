@@ -21,6 +21,15 @@ public class GenericSpecification<T> implements Specification<T> {
         this.criteria = new SpecSearchCriteria();
     }
 
+    private static boolean isNumeric(String str) {
+        try {
+            double d = Double.parseDouble(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
     @Nullable
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {

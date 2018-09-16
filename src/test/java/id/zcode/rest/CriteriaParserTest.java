@@ -24,6 +24,7 @@ public class CriteriaParserTest {
         Deque<?> deque = cp.parse(s);
         assertEquals("number of token is 3", 3, deque.size());
     }
+
     @Test
     public void testParseUnderScore(){
         String s = "name:Mie_Gore*,or,type:0";
@@ -32,5 +33,13 @@ public class CriteriaParserTest {
         assertEquals("number of token is 3", 3, deque.size());
         String value = (String) ((SpecSearchCriteria) ((LinkedList) deque).get(2)).getValue();
         assertEquals("value with underscor", "mie_gore", value);
+    }
+
+    @Test
+    public void testDash(){
+        String s = "name:Mie-Gore*,or,type:0";
+        CriteriaParser cp = new CriteriaParser();
+        Deque<?> deque = cp.parse(s);
+        assertEquals("number of token is 3", 3, deque.size());
     }
 }

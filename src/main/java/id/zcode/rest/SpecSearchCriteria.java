@@ -1,6 +1,8 @@
 package id.zcode.rest;
 
-public class SpecSearchCriteria {
+import java.io.Serializable;
+
+public class SpecSearchCriteria implements Serializable {
 
     private String key;
     private SearchOperation operation;

@@ -11,6 +11,22 @@ public class CriteriaParserTest {
 
     @Test
     public void testParseWhiteSpace(){
+        String s = "name:Mie Gore*";
+        CriteriaParser cp = new CriteriaParser();
+        Deque<?> deque = cp.parse(s);
+        assertEquals("number of token is 3", 1, deque.size());
+    }
+
+    @Test
+    public void testParseDash(){
+        String s = "name:Mie-Gore*";
+        CriteriaParser cp = new CriteriaParser();
+        Deque<?> deque = cp.parse(s);
+        assertEquals("number of token is 3", 1, deque.size());
+    }
+
+    @Test
+    public void testParseWhiteSpace2(){
         String s = "name:Mie*,or,type:0";
         CriteriaParser cp = new CriteriaParser();
         Deque<?> deque = cp.parse(s);
@@ -19,7 +35,7 @@ public class CriteriaParserTest {
 
     @Test
     public void testParseComma(){
-        String s = "name:Mie   Gore*,or,type:0";
+        String s = "name:Mie Gore*,or,type:0";
         CriteriaParser cp = new CriteriaParser();
         Deque<?> deque = cp.parse(s);
         assertEquals("number of token is 3", 3, deque.size());
@@ -41,5 +57,31 @@ public class CriteriaParserTest {
         CriteriaParser cp = new CriteriaParser();
         Deque<?> deque = cp.parse(s);
         assertEquals("number of token is 3", 3, deque.size());
+    }
+
+    @Test
+    public void testAsterikStartWith(){
+        String s = "name:Mie*";
+        CriteriaParser cp = new CriteriaParser();
+        Deque<?> deque = cp.parse(s);
+        SpecSearchCriteria ssc = (SpecSearchCriteria) deque.getFirst();
+        assertEquals("should start with", SearchOperation.STARTS_WITH, ssc.getOperation());
+    }
+    @Test
+    public void testAsterikEndWith(){
+        String s = "name:*Mie";
+        CriteriaParser cp = new CriteriaParser();
+        Deque<?> deque = cp.parse(s);
+        SpecSearchCriteria ssc = (SpecSearchCriteria) deque.getFirst();
+        assertEquals("should end with", SearchOperation.ENDS_WITH, ssc.getOperation());
+    }
+
+    @Test
+    public void testAsterikContains(){
+        String s = "name:*Mie*";
+        CriteriaParser cp = new CriteriaParser();
+        Deque<?> deque = cp.parse(s);
+        SpecSearchCriteria ssc = (SpecSearchCriteria) deque.getFirst();
+        assertEquals("should contains", SearchOperation.CONTAINS, ssc.getOperation());
     }
 }

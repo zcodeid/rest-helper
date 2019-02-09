@@ -7,7 +7,7 @@
 
     <groupId>id.zcode</groupId>
     <artifactId>rest-helper</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -29,9 +29,10 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.4.RELEASE</version>
+        <version>2.1.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
 
     <dependencies>
         <dependency>
@@ -68,45 +69,20 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
+
 
     <developers>
         <developer>
             <name>Windu Purnomo</name>
             <email>wpwindupurnomo@gmail.com</email>
             <organization>zcode.id</organization>
-            <organizationUrl>http:/zcode.id</organizationUrl>
+            <organizationUrl>https:/zcode.id</organizationUrl>
         </developer>
     </developers>
 
-    <scm>
-        <connection>scm:git:git://github.com/windupurnomo/rest-helper.git</connection>
-        <developerConnection>scm:git:ssh://github.com:windupurnomo/rest-helper.git</developerConnection>
-        <url>http://github.com/windupurnomo/rest-helper/tree/master</url>
-    </scm>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

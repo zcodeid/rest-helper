@@ -7,7 +7,7 @@
 
     <groupId>id.zcode</groupId>
     <artifactId>rest-helper</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>

@@ -4,6 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.criteria.*;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,15 +48,28 @@ public class GenericSpecification<T> implements Specification<T> {
                     : root.get(criteria.getKey());
             if (matcher.find()) expression = builder.lower(expression);
         }
+        Predicate p = null;
+        Date d = Helper.toDate(criteria.getValue().toString());
+        Boolean b = Helper.toBoolean(criteria.getValue().toString());
         switch (criteria.getOperation()) {
             case EQUALITY:
+                if (b != null)
+                    return builder.equal(expression, b);
                 return builder.equal(expression, criteria.getValue());
             case NEGATION:
                 return builder.notEqual(expression, criteria.getValue());
             case GREATER_THAN:
-                return builder.greaterThan(root.get(criteria.getKey()), criteria.getValue().toString());
+                if (d != null) {
+                    return builder.greaterThan(root.get(criteria.getKey()), d);
+                } else {
+                    return builder.greaterThan(root.get(criteria.getKey()), criteria.getValue().toString());
+                }
             case LESS_THAN:
-                return builder.lessThan(root.get(criteria.getKey()), criteria.getValue().toString());
+                if (d != null) {
+                    return builder.lessThan(root.get(criteria.getKey()), d);
+                } else {
+                    return builder.lessThan(root.get(criteria.getKey()), criteria.getValue().toString());
+                }
             case LIKE:
                 return builder.like(expression, criteria.getValue().toString());
             case STARTS_WITH:

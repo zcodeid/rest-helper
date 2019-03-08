@@ -35,6 +35,8 @@ public class GenericSpecification<T> implements Specification<T> {
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {
         Expression<String> expression = null;
+        Date d = Helper.toDate(criteria.getValue().toString());
+        Boolean b = Helper.toBoolean(criteria.getValue().toString());
         if (criteria.getValue() instanceof String) {
             Join joiner = null;
             String[] keys = criteria.getKey().split("_");
@@ -46,11 +48,9 @@ public class GenericSpecification<T> implements Specification<T> {
             Matcher matcher = pattern.matcher(criteria.getValue().toString());
             expression = joiner != null ? joiner.get(keys[keys.length - 1])
                     : root.get(criteria.getKey());
-            if (matcher.find()) expression = builder.lower(expression);
+            if (matcher.find() && b == null && d == null) expression = builder.lower(expression);
         }
         Predicate p = null;
-        Date d = Helper.toDate(criteria.getValue().toString());
-        Boolean b = Helper.toBoolean(criteria.getValue().toString());
         switch (criteria.getOperation()) {
             case EQUALITY:
                 if (b != null)
